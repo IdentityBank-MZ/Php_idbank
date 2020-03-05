@@ -1,2 +1,6 @@
-# Php_idbank
-PHP project - Driver for IDBank
+# PHP project - Driver for IDBank
+
+[Identity Bank](https://www.identitybank.eu)
+
+### idbank
+The IDB database driver architectures where data is separated from metadata and from search indexes. The business data encoded is stored in any type of database in which the identifier allows you to retrieve it on demand. The key to access data is stored at Key Management System which allows decryption. Future implementations assume that only customers have a key to decrypt it so even Identity Bank cannot access stored data. All changes for data are stored separately and allows business to decide what and when action will take place using data events. The first phase implements separation of metadata which describe safes, types, etc… and data which currently is stored using a Postgres database and this data is used when executing a search. Additionally we added (Change Request) tables where we store all change events from customers and (Status Tables) which provide additional information of action for customers data like invite to [People Portal](https://github.com/IdentityBank/Php_people). Next step will implement events data and is currently under development. That table will contain specific actions defined for stored data. Each data set (Data Table, Change Request Table, Status Table and Events Table) is defined per individual vault and will not affect other vaults and can be easily scaled by moving into separate subsystems. The current data Database (Postgres) and metadata (AWS dynamo DB) can be easily replaced with other solutions if needed.
