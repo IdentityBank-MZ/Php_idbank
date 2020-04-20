@@ -1417,12 +1417,15 @@ class BusinessIdBankClient extends IdBankClient
         return $this->parseResponse($response);
     }
 
+    /* -------------------------- Pseudonymisation -------------------------- */
+
     /**
      * Pseudonymisation
      */
 
     /**
      * @param $database
+     *
      * @return mixed
      */
     public function recreateAccountPseudonymisation($database)
@@ -1435,59 +1438,6 @@ class BusinessIdBankClient extends IdBankClient
         ];
 
         return $this->parseResponse($this->execute($query));
-    }
-
-    /**
-     * @return mixed
-     * @throws Exception
-     */
-    public function createAccountPseudonymisations()
-    {
-        $this->validateServiceIdbId(__FUNCTION__ . 'Base');
-        $parsedIds = IdbAccountId::parse($this->accountName);
-        $idbDatabaseData = self::getDatabaseNameByBusinessId($this->accountName);
-        $idbDatabaseData .= '.pn';
-        $accountName = $this->accountName;
-        $this->accountName = $idbDatabaseData;
-        $this->validateServiceIdbId(__FUNCTION__);
-        $query = [
-            "service" => $this->service,
-            "account" => $this->accountName,
-            "oid" => ArrayHelper::getValue($parsedIds, 'oid', null),
-            "businessDbId" => $accountName,
-            "query" => "createAccountPseudonymisations"
-        ];
-        $response = $this->execute($query);
-        $this->accountName = $accountName;
-
-        return $this->parseResponse($response);
-    }
-
-    /**
-     * @return mixed
-     * @throws Exception
-     */
-    public function deleteAccountPseudonymisations()
-    {
-        $this->validateServiceIdbId(__FUNCTION__ . 'Base');
-        $parsedIds = IdbAccountId::parse($this->accountName);
-        $idbDatabaseData = self::getDatabaseNameByBusinessId($this->accountName);
-        $idbDatabaseData .= '.pn';
-        $accountName = $this->accountName;
-        $this->accountName = $idbDatabaseData;
-        $this->validateServiceIdbId(__FUNCTION__);
-
-        $query = [
-            "service" => $this->service,
-            "account" => $this->accountName,
-            "businessDbId" => $accountName,
-            "oid" => ArrayHelper::getValue($parsedIds, 'oid', null),
-            "query" => "deleteAccountPseudonymisations"
-        ];
-        $response = $this->execute($query);
-        $this->accountName = $accountName;
-
-        return $this->parseResponse($response);
     }
 
     /**
@@ -1520,42 +1470,6 @@ class BusinessIdBankClient extends IdBankClient
 
         return $this->parseResponse($response);
     }
-
-    /**
-     * @param $idbId
-     * @param $data
-     *
-     * @param $businessDbId
-     *
-     * @return string|null
-     * @throws Exception
-     */
-    public function updatePseudonymisation($idbId, $data, $businessDbId = null)
-    {
-        if ($this->service !== 'business') {
-            $this->validateServiceIdbId(__FUNCTION__, ['idbId' => $idbId]);
-        }
-
-        $idbDatabaseData = self::getDatabaseNameByBusinessId($this->accountName);
-        $accountName = $this->accountName;
-        $this->accountName = $idbDatabaseData;
-        $this->validateServiceIdbId(__FUNCTION__);
-
-        $query = [
-            "service" => $this->service,
-            "account" => $this->accountName,
-            "businessDbId" => $businessDbId,
-            "query" => "updatePseudonymisationItem",
-            "idbId" => $idbId,
-            "data" => $data
-        ];
-
-        $response = $this->execute($query);
-        $this->accountName = $accountName;
-
-        return $this->parseResponse($response);
-    }
-
 }
 
 ################################################################################
